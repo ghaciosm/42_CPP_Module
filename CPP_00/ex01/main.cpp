@@ -1,4 +1,16 @@
-#include "contact.hpp"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ghaciosm <ghaciosm@student.42kocaeli.com>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/18 13:11:47 by ghaciosm          #+#    #+#             */
+/*   Updated: 2023/03/18 13:11:50 by ghaciosm         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "PhoneBook.hpp"
 
 void  add_func(PhoneBook *phonebook)
 {
@@ -18,21 +30,36 @@ void  add_func(PhoneBook *phonebook)
 void correct_func(std::string s)
 {
       if(s.length() > 10)
-            std::cout << std::setw(10) << s.substr(0,9) << "." << "|";
+            std::cout << std::setw(9) << s.substr(0,9) << "." << "|";
       else
             std::cout << std::setw(10) << s << "|";
+}
+
+int   num_check(std::string s)
+{
+      int i = 0;
+
+      while(s[i])
+      {
+            if (std::isdigit(s[i]) == 0)
+                  return (1);
+            i++;
+      }
+      return(0);
 }
 
 void  search_func(PhoneBook  *phonebook)
 {
       int i = 0;
+      std::string s;
       int index;
-
+      int count = phonebook->id;
+      if (count > 8)
+            count = 8;
       std::cout << "|----------|----------|----------|----------|\n";
       std::cout << "|    ID    |   NAME   |  SURNAME | NICKNAME |\n";
       std::cout << "|----------|----------|----------|----------|\n";
-
-      while(i < phonebook->id)
+      while(i < count)
       {
             std::cout << "|"<< std::setw(10) << i<< "|";
             correct_func(phonebook->contacts[i].name);
@@ -42,12 +69,18 @@ void  search_func(PhoneBook  *phonebook)
             i++;
       }
       if(phonebook->id == 0)
-            std::cout << "\n\033[95mNo one has been added yet!!!\033[0m\n";
+            std::cout << "\nNo one has been added yet!!!\n";
       else
       {
-            std::cout << "\n\033[95mEnter the number : \033[0m\n";
-            std::cin >> index;
-            if(index >= 0 && (index < phonebook->id))
+            std::cout << "\nEnter the number : \n";
+            std::cin >> s;
+            if (num_check(s))
+            {
+                  std::cout << "\nYou entered an invalid index!!!\n";
+                  return ;
+            }
+            index = std::stoi(s);
+            if(index >= 0 && (index < count))
             {
                   std::cout << "Name : " << phonebook->contacts[index].name << std::endl;
                   std::cout << "Surname : " << phonebook->contacts[index].surname << std::endl;
@@ -56,7 +89,7 @@ void  search_func(PhoneBook  *phonebook)
                   std::cout << "Dark Secret : " << phonebook->contacts[index].dark_secret << std::endl;
             }
             else
-                  std::cout << "\n\033[95mYou entered an invalid index!!!\033[0m\n";
+                  std::cout << "\nYou entered an invalid index!!!\n";
       }
 }
 
@@ -80,6 +113,6 @@ int main()
             else if(str == "EXIT")
                   break;
             else
-                  std::cout << "\033[95mInvalid command!!!!\033[0m\n";
+                  std::cout << "Invalid command!!!!\n";
       }
 }
